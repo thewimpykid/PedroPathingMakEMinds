@@ -51,19 +51,19 @@ public class PickDrop extends LinearOpMode {
                 if (!follower.isBusy()) {
                     claw.setClawPosition(1.0);
                     follower.followPath(placeSpecimen, false);
-                    if (pathTimer.getElapsedTimeSeconds() > 0.5) {
+//                    if (pathTimer.getElapsedTimeSeconds() > 0.5) {
                         arm.setPosition(-2950, 1.0);
                         slide.setPosition(-1000, 1.0);
                         claw.setClawPosition(1.0);
                         claw.setWristPosition(0.15);
                         claw.setArmPosition(0.9);
                         setPathState(2);
-                    }
+
 
                 }
                 break;
             case 2:
-                if(!follower.isBusy() && pathTimer.getElapsedTimeSeconds() > 0.5) {
+                if(!follower.isBusy()) {
                     slide.setPosition(0, 1.0);
                     if (slide.sendPosition() > -200) {
                         claw.setClawPosition(0);

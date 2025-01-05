@@ -7,8 +7,13 @@ import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.config.subsystem.Arm;
 import org.firstinspires.ftc.teamcode.config.subsystem.Claw;
+import org.firstinspires.ftc.teamcode.config.subsystem.Slide;
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
+import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.BezierLine;
+import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Path;
+import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Point;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Vector;
 import org.firstinspires.ftc.teamcode.pedroPathing.follower.Follower;
 
@@ -26,11 +31,17 @@ public class Gamepad extends LinearOpMode {
     double clawPosition = 0;
     double armPosition = 0.5;
     double wristPosition = 0.5;
-    private final Pose startPose = new Pose(0, 0, 0);
+    private final Pose observationPose = new Pose(5, 30, Math.toRadians(180));
+    private final Pose startPose = new Pose(10, 10, Math.toRadians(180));
     Claw claw;
+    Arm arm;
+    Slide slide;
+    private Path pickSpecimen, placeSpecimen, pickMore;
 
     @Override
     public void runOpMode() throws InterruptedException {
+        arm = new Arm("armMotor", hardwareMap);
+        slide = new Slide("slideMotor", hardwareMap);
         // Initializing motors and pathing
         DcMotor armMotor = hardwareMap.get(DcMotor.class, "armMotor");
         DcMotor slideMotor = hardwareMap.get(DcMotor.class, "slideMotor");
@@ -60,6 +71,8 @@ public class Gamepad extends LinearOpMode {
         armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         follower.startTeleopDrive();
+        pickSpecimen = new Path(new BezierLine(new Point(startPose), new Point(observationPose)));
+        placeSpecimen = new Path(new BezierLine(new Point(observationPose), new Point(35.5, 65, Point.CARTESIAN)));
 
         // Main control loop
         while (opModeIsActive()) {
@@ -99,10 +112,10 @@ public class Gamepad extends LinearOpMode {
 
             // Claw position control
             if (gamepad2.y) {
-                clawPosition = 0.3;
+                clawPosition = 0.7;
             }
             if (gamepad2.x) {
-                clawPosition = 0.7;
+                clawPosition = 1.0;
             }
 
             if (gamepad2.left_bumper) {
@@ -113,10 +126,31 @@ public class Gamepad extends LinearOpMode {
             }
 
             if (gamepad2.left_trigger > 0) {
-                armPosition += 0.01;
+                armPosition += 0.001;
             }
             if (gamepad2.right_trigger > 0) {
-                armPosition -= 0.01;
+                armPosition -= 0.001;
+            }
+            if (gamepad1.x) {
+
+                arm.setPosition(350, 1.0);
+                claw.setClawPosition(0.3);
+                claw.setWristPosition(0.8);
+                claw.setArmPosition(0.488);
+                follower.followPath(pickSpecimen, false);
+            }
+            if (gamepad1.right_bumper) {
+
+                arm.setPosition(-2900, 0.5);
+                slide.setPosition(-1000, 1.0);
+                claw.setClawPosition(1.0);
+                claw.setWristPosition(0.8);
+                claw.setArmPosition(0.55);
+                follower.followPath(placeSpecimen, false);
+            }
+
+            if (gamepad1.left_bumper) {
+                follower.breakFollowing();
             }
 
             // Set positions for the claw, wrist, and arm
