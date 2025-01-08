@@ -90,10 +90,10 @@ public class TestAuto extends LinearOpMode {
 //                .setPathEndVelocityConstraint(0)
                 .addPath(new BezierLine(
                         new Point(45, 2, Point.CARTESIAN),
-                        new Point(7, 0, Point.CARTESIAN)
+                        new Point(6.5, 0, Point.CARTESIAN)
                 ))
                 .setConstantHeadingInterpolation(Math.toRadians(180))
-                .setPathEndVelocityConstraint(0)
+                .setPathEndVelocityConstraint(0.1)
 //                .addPath(new BezierLine(
 //                        new Point(14, 3.75, Point.CARTESIAN),
 //                        new Point(30, 30, Point.CARTESIAN)
@@ -112,19 +112,17 @@ public class TestAuto extends LinearOpMode {
         pickSpecimen = new Path(new BezierLine(new Point(30, 30, Point.CARTESIAN), new Point(observationPose)));
         pickSpecimen.setPathEndVelocityConstraint(0);
 
-        placeSpecimen2 = new Path(new BezierLine(new Point(observationPose), new Point(27.5, yPlace, Point.CARTESIAN)));
-        placeSpecimen2.setPathEndVelocityConstraint(0);
+        placeSpecimen2 = new Path(new BezierLine(new Point(observationPose), new Point(28.5, yPlace, Point.CARTESIAN)));
         placeSpecimen2.setConstantHeadingInterpolation(Math.toRadians(180));
 
-        placeSpecimen = new Path(new BezierLine(new Point(observationPose), new Point(27.5, yPlace, Point.CARTESIAN)));
-        placeSpecimen.setPathEndVelocityConstraint(0);
+        placeSpecimen = new Path(new BezierLine(new Point(observationPose), new Point(28.5, yPlace, Point.CARTESIAN)));
         placeSpecimen.setConstantHeadingInterpolation(Math.toRadians(180));
 
         pickMore = new Path( new BezierCurve(
                 new Point(34.000, 65.000, Point.CARTESIAN),
                 new Point(13.000, 63.250, Point.CARTESIAN),
                 new Point(34.000, 32.500, Point.CARTESIAN),
-                new Point(5.000, 25, Point.CARTESIAN)
+                new Point(5.500, 25, Point.CARTESIAN)
         ));
         pickMore.setPathEndVelocityConstraint(0);
         pickMore.setConstantHeadingInterpolation(Math.toRadians(180));
@@ -144,8 +142,9 @@ public class TestAuto extends LinearOpMode {
             case 1:
                 if(!follower.isBusy() && pathTimer.getElapsedTimeSeconds() > 0.5) {
                     slide.setPosition(0, 1.0);
+//                    claw.setArmPosition(0.85);
                     if (slide.sendPosition() > -75) {
-                        claw.setClawPosition(0);
+                        claw.setClawPosition(0.3);
                         setPathState(2);
                     }
                 }
@@ -156,7 +155,7 @@ public class TestAuto extends LinearOpMode {
                     arm.setPosition(275, 1.0);
                     claw.setClawPosition(0.3);
                     claw.setWristPosition(0.8);
-                    claw.setArmPosition(0.488);
+                    claw.setArmPosition(0.68);
                     follower.followPath(goToSamples, false);
                     setPathState(4);
                 }
@@ -177,11 +176,11 @@ public class TestAuto extends LinearOpMode {
                 if(claw.getClawPosition() > 0.8 && pathTimer.getElapsedTimeSeconds() > 0.5) {
                     follower.followPath(placeSpecimen, true);
 //                    if (pathTimer.getElapsedTimeSeconds() > 0.5) {
-                    arm.setPosition(-2700, 0.5);
-                    slide.setPosition(-800, 1.0);
+                    arm.setPosition(-2900, 0.5);
+                    slide.setPosition(-700, 1.0);
                     claw.setClawPosition(1.0);
-                    claw.setArmPosition(0.55);
                     claw.setWristPosition(0.2);
+                    claw.setArmPosition(1.0);
                     setPathState(6);
                 }
                 break;
@@ -198,7 +197,8 @@ public class TestAuto extends LinearOpMode {
                     arm.setPosition(275, 1.0);
                     claw.setClawPosition(0.3);
                     claw.setWristPosition(0.8);
-                    claw.setArmPosition(0.488);
+                    claw.setArmPosition(0.68);
+
                     follower.followPath(pickMore, false);
                     setPathState(9);
                 }
@@ -214,11 +214,13 @@ public class TestAuto extends LinearOpMode {
                     yPlace += 2;
                     follower.followPath(placeSpecimen, true);
 //                    if (pathTimer.getElapsedTimeSeconds() > 0.5) {
-                    arm.setPosition(-2700, 0.5);
-                    slide.setPosition(-800, 1.0);
+                    arm.setPosition(-2900, 0.5);
+                    slide.setPosition(-700, 1.0);
+
                     claw.setClawPosition(1.0);
-                    claw.setArmPosition(0.55);
                     claw.setWristPosition(0.2);
+                    claw.setArmPosition(1.0);
+
                     setPathState(11);
                 }
                 break;
@@ -252,7 +254,7 @@ public class TestAuto extends LinearOpMode {
         follower.setStartingPose(startPose);
         claw.setClawPosition(1.0);
         claw.setWristPosition(0.8);
-        claw.setArmPosition(0.55);
+        claw.setArmPosition(1.0);
 
         buildPaths();
 

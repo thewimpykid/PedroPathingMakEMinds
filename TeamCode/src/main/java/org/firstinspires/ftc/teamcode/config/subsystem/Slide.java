@@ -12,6 +12,7 @@ public class Slide {
     public Slide(String slideName, HardwareMap hardwareMap) {
         this.slide = hardwareMap.get(DcMotorEx.class, slideName);
         slide.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        slide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
     public int sendPosition() {
         return slide.getCurrentPosition();
@@ -28,6 +29,21 @@ public class Slide {
         slide.setPower(1.0);
     }
 
+    public void setPower(double power) {
+        slide.setPower(power);
+    }
+
+    public void setModeEncoder(){
+        slide.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+    }
+
+    public void setModeNoEncoder(){
+        slide.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+    }
+
+    public DcMotor getMotor() {
+        return slide;
+    }
 
 
 

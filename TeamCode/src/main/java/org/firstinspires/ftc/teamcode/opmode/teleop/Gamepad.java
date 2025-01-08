@@ -31,8 +31,8 @@ public class Gamepad extends LinearOpMode {
     double clawPosition = 0;
     double armPosition = 0.5;
     double wristPosition = 0.5;
-    private final Pose observationPose = new Pose(5, 30, Math.toRadians(180));
-    private final Pose startPose = new Pose(10, 10, Math.toRadians(180));
+    private final Pose observationPose = new Pose(10, 30, Math.toRadians(180));
+    private final Pose startPose = new Pose(30, 30, Math.toRadians(180));
     Claw claw;
     Arm arm;
     Slide slide;
@@ -42,12 +42,9 @@ public class Gamepad extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         arm = new Arm("armMotor", hardwareMap);
         slide = new Slide("slideMotor", hardwareMap);
-        // Initializing motors and pathing
-        DcMotor armMotor = hardwareMap.get(DcMotor.class, "armMotor");
-        DcMotor slideMotor = hardwareMap.get(DcMotor.class, "slideMotor");
         claw = new Claw(hardwareMap);
 
-        // Initializing the IMU for orientation tracking
+        // Initialize the IMU for orientation tracking
         IMU imu = hardwareMap.get(IMU.class, "imu");
         IMU.Parameters imuParams = new IMU.Parameters(
                 new RevHubOrientationOnRobot(
@@ -61,18 +58,23 @@ public class Gamepad extends LinearOpMode {
         follower = new Follower(hardwareMap);
         follower.setStartingPose(startPose);
 
+        // Initialize paths for pick and place actions
+        pickSpecimen = new Path(new BezierLine(new Point(startPose), new Point(observationPose)));
+        placeSpecimen = new Path(new BezierLine(new Point(observationPose), new Point(35.5, 65, Point.CARTESIAN)));
+
         waitForStart();
 
         if (isStopRequested()) return;
 
         // Set slide motor to use encoders and apply braking when idle
+        DcMotor armMotor = hardwareMap.get(DcMotor.class, "armMotor");
+        DcMotor slideMotor = hardwareMap.get(DcMotor.class, "slideMotor");
+
         slideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         slideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         follower.startTeleopDrive();
-        pickSpecimen = new Path(new BezierLine(new Point(startPose), new Point(observationPose)));
-        placeSpecimen = new Path(new BezierLine(new Point(observationPose), new Point(35.5, 65, Point.CARTESIAN)));
 
         // Main control loop
         while (opModeIsActive()) {
@@ -82,9 +84,9 @@ public class Gamepad extends LinearOpMode {
             // Forward/Backward movement, left/right, and turning control
             if (gamepad1.right_trigger != 0) {
                 follower.setTeleOpMovementVectors(
-                        -gamepad1.left_stick_y,  // Forward/Backward
-                        -gamepad1.left_stick_x,  // Left/Right
-                        -gamepad1.right_stick_x, // Turning
+                        -gamepad1.left_stick_y / 2.5,  // Forward/Backward
+                        -gamepad1.left_stick_x / 2.5,  // Left/Right
+                        -gamepad1.right_stick_x / 2.5, // Turning
                         true                       // Robot-Centric Mode
                 );
             } else {
@@ -119,34 +121,27 @@ public class Gamepad extends LinearOpMode {
             }
 
             if (gamepad2.left_bumper) {
-                wristPosition += 0.01;
+                wristPosition += 0.02;
             }
             if (gamepad2.right_bumper) {
-                wristPosition -= 0.01;
+                wristPosition -= 0.02;
             }
 
             if (gamepad2.left_trigger > 0) {
-                armPosition += 0.001;
+                armPosition += 0.025;
             }
             if (gamepad2.right_trigger > 0) {
-                armPosition -= 0.001;
+                armPosition -= 0.025;
             }
             if (gamepad1.x) {
-
-                arm.setPosition(350, 1.0);
-                claw.setClawPosition(0.3);
-                claw.setWristPosition(0.8);
-                claw.setArmPosition(0.488);
-                follower.followPath(pickSpecimen, false);
+                clawPosition = 1.0;
+                wristPosition = 0.8;
+                armPosition = 0.488;
             }
             if (gamepad1.right_bumper) {
-
-                arm.setPosition(-2900, 0.5);
-                slide.setPosition(-1000, 1.0);
-                claw.setClawPosition(1.0);
-                claw.setWristPosition(0.8);
-                claw.setArmPosition(0.55);
-                follower.followPath(placeSpecimen, false);
+                clawPosition = 0.7;
+                wristPosition = (0.8);
+                armPosition = 0.55;
             }
 
             if (gamepad1.left_bumper) {
@@ -157,6 +152,14 @@ public class Gamepad extends LinearOpMode {
             claw.setClawPosition(clawPosition);
             claw.setWristPosition(wristPosition);
             claw.setArmPosition(armPosition);
+
+            // Handle path following actions (Pick and Place)
+            if (gamepad1.a) {
+                follower.followPath(pickSpecimen, false);  // Pick specimen path
+            }
+            if (gamepad1.b) {
+                follower.followPath(placeSpecimen, false);  // Place specimen path
+            }
 
             // Display telemetry data for all positions
             telemetry.addData("X", follower.getPose().getX());
