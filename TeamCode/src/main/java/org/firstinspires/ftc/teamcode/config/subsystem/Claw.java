@@ -85,4 +85,24 @@ public class Claw {
     public void setArmPosition(double position) {
         arm.setPosition(position);
     }
+
+    public void initBasket() {
+        setClawPosition(1.0);
+        setWristPosition(0.5);
+        setArmPosition(0.505);
+    }
+
+    public void initSpecAuto() {
+        setClawPosition(1.0);
+        setWristPosition(0.8);
+        setArmPosition(1.0);
+    }
+
+    public void pickupBasket(double wristOffset) {
+        setClawPosition(0.5);
+        setWristPosition(0.5  +wristOffset);
+        setArmPosition(0.617);
+    }
+
+
 }

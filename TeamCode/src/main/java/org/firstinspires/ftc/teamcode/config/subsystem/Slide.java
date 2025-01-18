@@ -23,13 +23,12 @@ public class Slide {
         slide.setPower(speed);
     }
 
-    public void resetArm() {
-        slide.setTargetPosition(0);
-        slide.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-        slide.setPower(1.0);
+    public void resetSlide() {
+        slide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 
-    public void setPower(double power) {
+    public void setPowerSlide(double power) {
+        slide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         slide.setPower(power);
     }
 

@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.opmode.teleop;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import org.firstinspires.ftc.teamcode.config.subsystem.Arm;
@@ -21,8 +20,8 @@ import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Point;
  * @version 2.0, 11/28/2024
  */
 
-@TeleOp(name = "GamepadWithAcceleration")
-public class GamepadWithAcceleration extends LinearOpMode {
+@TeleOp(name = "GamepadSpec")
+public class GamepadSpec extends LinearOpMode {
 
     private Follower follower;
     private boolean isArmDoing = false;
@@ -30,10 +29,9 @@ public class GamepadWithAcceleration extends LinearOpMode {
     double clawPosition = 0;
     double armPosition = 0.5;
     double wristPosition = 0.5;
-    boolean running = false;
 
     private final Pose observationPose = new Pose(5, 30, Math.toRadians(180));
-    private final Pose parkPose = new Pose (52, 100, Math.toRadians(270));
+    private final Pose parkPose = new Pose (52, 100, Math.toRadians(180));
 
     private final Pose bucketPose = new Pose(6.5, 131.5, Math.toRadians(315));
 
@@ -100,7 +98,7 @@ public class GamepadWithAcceleration extends LinearOpMode {
             follower.setTeleOpMovementVectors(
                     targetForwardPower * 0.8,
                     targetStrafePower * 0.8,
-                            targetTurnPower,
+                    targetTurnPower,
                     false
             );
             follower.update();
@@ -114,52 +112,51 @@ public class GamepadWithAcceleration extends LinearOpMode {
 
             // THIS IS THE ALREADY WORKING CODE BELOW
             if (gamepad2.right_stick_y != 0.0) {
-                if (gamepad2.a) {
-                    arm.setPowerArm(gamepad2.right_stick_y / 3);
-                } else {
+                if (arm.sendPosition() > -0 || gamepad2.right_stick_y > 0.0) {
                     arm.setPowerArm(gamepad2.right_stick_y);
                 }
+
             } else {
-                if (!running) {arm.setPowerArm(0);}
+                arm.setPowerArm(0);
+
             }
 
-
-//            int armTargetPosition = arm.sendPosition() + (int) (gamepad2.right_stick_y * 200);  // Adjust the factor (100) to control speed/precision
-//            double armSpeed = (gamepad2.right_trigger > 0) ? 0.33 : 1.0;  // Slow down if the right trigger is pressed
-//
-//            arm.setPosition(armTargetPosition, armSpeed);  // Move arm to the target position with speed
-
-
-
-//            int slideTargetPosition = slide.sendPosition() + (int) (gamepad2.left_stick_y * 200);  // Adjust the factor (100) to control speed/precision
-//            double slideSpeed = (gamepad2.left_trigger > 0) ? 0.33 : 1.0;  // Slow down if the left trigger is pressed
-//
-//            slide.setPosition(slideTargetPosition, slideSpeed);  // Move slide to the target position with speed
-
+            if (arm.sendPosition() < -50) {
+                arm.setPosition(0, 1.0);
+            }
 
             // SLIDE WORKING CODE BELOW
             if (gamepad2.left_stick_y != 0.0) {
-                if (gamepad2.b) {
-                    slide.setPowerSlide(gamepad2.left_stick_y / 3);
-                } else {
+                if (slide.sendPosition() > -2300 || gamepad2.left_stick_y > 0.0 || arm.sendPosition() > -1500) {
                     slide.setPowerSlide(gamepad2.left_stick_y);
                 }
+
             } else {
-                if (!running) {slide.setPowerSlide(0); }
+                slide.setPowerSlide(0);
+            }
+
+            if (slide.sendPosition() < -2350 && arm.sendPosition() > -1500) {
+                slide.setPosition(-2300, 1.0);
+            } else {
+                slide.setModeEncoder();
             }
 
             if (gamepad2.y) {
-                clawPosition = 0.7;
+                clawPosition = 0.5;
             }
             if (gamepad2.x) {
                 clawPosition = 1.0;
             }
 
+            if (gamepad2.b) {
+                slide.resetSlide();
+            }
+
             if (gamepad2.left_bumper) {
-                wristPosition += 0.01;
+                wristPosition += 0.015;
             }
             if (gamepad2.right_bumper) {
-                wristPosition -= 0.01;
+                wristPosition -= 0.015;
             }
 
             if (gamepad2.left_trigger > 0) {
@@ -173,40 +170,20 @@ public class GamepadWithAcceleration extends LinearOpMode {
                 setLoadPosClaw();
             }
 
+            if (gamepad1.left_trigger != 0) {
+                setPopulatePosClaw();
+            }
+
             if (gamepad1.right_bumper) {
                 setScorePosClaw();
             }
 
-            if (slide.sendPosition() > 150) {
-                slide.setPosition(0, 1.0);
-            }
-
-            if (gamepad1.x) {
-                running = true;
-//                if (follower.getPose().getX() > 30 && follower.getPose().getY() < 120)
-                follower.followPath(goPark);
-                arm.setPosition(-3300, 1.0);
-            }
-
-            if (running && arm.sendPosition() < -2000 && follower.getPose().getX() < 30) {
-            }
-
-            if (running && arm.sendPosition() < -3200 && slide.sendPosition() < -2950) {running = false;}
-
-            if (slide.sendPosition() < -2000 && running) {
-                setScorePosClaw();
-            }
-
-            if (gamepad2.a) {
-                running = false;
-            }
+//            if (slide.sendPosition() > 150) {
+//                slide.setPosition(0, 1.0);
+//            }
 
             if (gamepad1.y) {
                 follower.breakFollowing();
-                follower.startTeleopDrive();
-            }
-
-            if (running & !follower.isBusy()) {
                 follower.startTeleopDrive();
             }
 
@@ -226,31 +203,22 @@ public class GamepadWithAcceleration extends LinearOpMode {
         }
     }
 
-    private double smoothPowerChange(double current, double target) {
-        if (current < target) {
-            current += accelerationStep;
-            if (current > target) {
-                current = target;
-            }
-        } else if (current > target) {
-            current -= accelerationStep;
-            if (current < target) {
-                current = target;
-            }
-        }
-        return current;
-    }
-
     public void setLoadPosClaw() {
         clawPosition = (0.5);
-        wristPosition = (0.15);
-        armPosition = (0.56); // was 0.4
+        wristPosition = (0.5);
+        armPosition = (0.617);
 
     }
 
     public void setScorePosClaw() {
         clawPosition=(1.0);
-        wristPosition=(0.8); // was 0.8
+        wristPosition=(0.5);
         armPosition=(0.505);
+    }
+
+    public void setPopulatePosClaw() {
+        clawPosition = (0.5);
+        wristPosition = (0.5);
+        armPosition = (0.57);
     }
 }

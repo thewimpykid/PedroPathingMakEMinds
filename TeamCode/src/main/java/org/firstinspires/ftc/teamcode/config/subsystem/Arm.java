@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
-public class Arm {
+public class Arm{
     private DcMotorEx arm;
     private String armName;
 
@@ -29,7 +29,8 @@ public class Arm {
         arm.setPower(1.0);
     }
 
-    public void setPower(double power) {
+    public void setPowerArm(double power) {
+        arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         arm.setPower(power);
     }
 
