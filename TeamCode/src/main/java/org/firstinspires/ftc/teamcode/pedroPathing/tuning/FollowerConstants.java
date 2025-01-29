@@ -67,9 +67,9 @@ public class FollowerConstants {
 
     // Drive PIDF coefficients
     public static CustomFilteredPIDFCoefficients drivePIDFCoefficients = new CustomFilteredPIDFCoefficients(
-            0.013,
+            0.013, // 0.018
             0,
-            0.0000003, /// was 0.0001
+            0.0000003, /// was 0.001
             0.6,
             0);
 
@@ -104,7 +104,7 @@ public class FollowerConstants {
     // Decreasing this will cause the deceleration at the end of the Path to be slower, making the
     // robot slower but reducing risk of end-of-path overshoots or localization slippage.
     // This can be set individually for each Path, but this is the default.
-    public static double zeroPowerAccelerationMultiplier = 6;
+    public static double zeroPowerAccelerationMultiplier = 5;
 
 
     // When the robot is at the end of its current Path or PathChain and the velocity goes below
@@ -200,7 +200,7 @@ public class FollowerConstants {
 
     // Secondary drive PIDF coefficients
     public static CustomFilteredPIDFCoefficients secondaryDrivePIDFCoefficients = new CustomFilteredPIDFCoefficients(
-            0.02,
+            0.03,
             0,
             0.000005,
             0.6,

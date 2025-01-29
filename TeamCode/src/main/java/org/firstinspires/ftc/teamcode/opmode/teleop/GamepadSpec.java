@@ -112,17 +112,12 @@ public class GamepadSpec extends LinearOpMode {
 
             // THIS IS THE ALREADY WORKING CODE BELOW
             if (gamepad2.right_stick_y != 0.0) {
-                if (arm.sendPosition() > -0 || gamepad2.right_stick_y > 0.0) {
+
                     arm.setPowerArm(gamepad2.right_stick_y);
-                }
 
             } else {
                 arm.setPowerArm(0);
 
-            }
-
-            if (arm.sendPosition() < -50) {
-                arm.setPosition(0, 1.0);
             }
 
             // SLIDE WORKING CODE BELOW
@@ -153,18 +148,30 @@ public class GamepadSpec extends LinearOpMode {
             }
 
             if (gamepad2.left_bumper) {
-                wristPosition += 0.015;
+                wristPosition += 0.001;
             }
             if (gamepad2.right_bumper) {
-                wristPosition -= 0.015;
+                wristPosition -= 0.001;
             }
 
             if (gamepad2.left_trigger > 0) {
-                armPosition += 0.003;
+                armPosition += 0.0015;
             }
             if (gamepad2.right_trigger > 0) {
-                armPosition -= 0.003;
+                armPosition -= 0.0015;
             }
+            if (armPosition > 0.6845) {
+                armPosition = 0.6825;
+            }
+            if (armPosition < 0.573) {
+                armPosition = 0.572;
+            }
+            if (wristPosition > 1.0) {
+                wristPosition = 1.0;
+            }
+
+            if (wristPosition < 0.797) {
+                wristPosition = 0.799;          }
 
             if (gamepad1.left_bumper) {
                 setLoadPosClaw();
@@ -178,6 +185,13 @@ public class GamepadSpec extends LinearOpMode {
                 setScorePosClaw();
             }
 
+            if (gamepad2.left_bumper) {
+                wristPosition += 0.015;
+            }
+            if (gamepad2.right_bumper) {
+                wristPosition -= 0.015;
+            }
+
 //            if (slide.sendPosition() > 150) {
 //                slide.setPosition(0, 1.0);
 //            }
@@ -185,6 +199,14 @@ public class GamepadSpec extends LinearOpMode {
             if (gamepad1.y) {
                 follower.breakFollowing();
                 follower.startTeleopDrive();
+            }
+
+            if (wristPosition < 0) {
+                wristPosition = 0;
+            }
+
+            if (wristPosition > 1) {
+                wristPosition = 1;
             }
 
             claw.setClawPosition(clawPosition);

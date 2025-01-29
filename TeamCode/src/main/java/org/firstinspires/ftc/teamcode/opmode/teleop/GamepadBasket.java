@@ -26,7 +26,7 @@ public class GamepadBasket extends LinearOpMode {
     private Follower follower;
     private boolean isArmDoing = false;
 
-    double clawPosition = 0;
+    double clawPosition = 0.25;
     double armPosition = 0.5;
     double wristPosition = 0.5;
 
@@ -112,37 +112,35 @@ public class GamepadBasket extends LinearOpMode {
 
             // THIS IS THE ALREADY WORKING CODE BELOW
             if (gamepad2.right_stick_y != 0.0) {
-                if (arm.sendPosition() > -1900 || gamepad2.right_stick_y > 0.0) {
-                    arm.setPowerArm(gamepad2.right_stick_y);
-                }
+                   arm.setPowerArm(gamepad2.right_stick_y);
+
 
             } else {
                 arm.setPowerArm(0);
 
             }
 
-            if (arm.sendPosition() < -2000) {
-                arm.setPosition(-1950, 1.0);
-            }
+//            if (arm.sendPosition() < -2000) {
+//                arm.setPosition(-1950, 1.0);
+//            }
 
             // SLIDE WORKING CODE BELOW
             if (gamepad2.left_stick_y != 0.0) {
-                if (slide.sendPosition() > -2300 || gamepad2.left_stick_y > 0.0 || arm.sendPosition() > -1500) {
                     slide.setPowerSlide(gamepad2.left_stick_y);
-                }
+
 
             } else {
                 slide.setPowerSlide(0);
             }
 
-            if (slide.sendPosition() < -2350 && arm.sendPosition() > -1500) {
-                slide.setPosition(-2300, 1.0);
-            } else {
-                slide.setModeEncoder();
-            }
+//            if (slide.sendPosition() < -2350 && arm.sendPosition() > -1500) {
+//                slide.setPosition(-2300, 1.0);
+//            } else {
+//                slide.setModeEncoder();
+//            }
 
             if (gamepad2.y) {
-                clawPosition = 0.5;
+                clawPosition = 0.25;
             }
             if (gamepad2.x) {
                 clawPosition = 1.0;
@@ -153,18 +151,30 @@ public class GamepadBasket extends LinearOpMode {
             }
 
             if (gamepad2.left_bumper) {
-                wristPosition += 0.015;
+                wristPosition += 0.001;
             }
             if (gamepad2.right_bumper) {
-                wristPosition -= 0.015;
+                wristPosition -= 0.001;
             }
 
             if (gamepad2.left_trigger > 0) {
-                armPosition += 0.003;
+                armPosition += 0.0015;
             }
             if (gamepad2.right_trigger > 0) {
-                armPosition -= 0.003;
+                armPosition -= 0.0015;
             }
+            if (armPosition > 0.6845) {
+                armPosition = 0.6825;
+            }
+            if (armPosition < 0.573) {
+                armPosition = 0.572;
+            }
+            if (wristPosition > 1.0) {
+                wristPosition = 1.0;
+            }
+
+            if (wristPosition < 0.797) {
+                wristPosition = 0.799;          }
 
             if (gamepad1.left_bumper) {
                 setLoadPosClaw();
@@ -177,6 +187,13 @@ public class GamepadBasket extends LinearOpMode {
             if (gamepad1.right_bumper) {
                 setScorePosClaw();
             }
+
+//            if (gamepad2.left_bumper) {
+//                wristPosition += 0.015;
+//            }
+//            if (gamepad2.right_bumper) {
+//                wristPosition -= 0.015;
+//            }
 
 //            if (slide.sendPosition() > 150) {
 //                slide.setPosition(0, 1.0);
@@ -204,21 +221,21 @@ public class GamepadBasket extends LinearOpMode {
     }
 
     public void setLoadPosClaw() {
-        clawPosition = (0.5);
-        wristPosition = (0.5);
-        armPosition = (0.617);
+        clawPosition = (0.25);
+        wristPosition = (0.85);
+        armPosition = (0.6825);
 
     }
 
     public void setScorePosClaw() {
         clawPosition=(1.0);
-        wristPosition=(0.5);
-        armPosition=(0.505);
+        wristPosition=(0.856);
+        armPosition=(0.572);
     }
 
     public void setPopulatePosClaw() {
-        clawPosition = (0.5);
-        wristPosition = (0.5);
-        armPosition = (0.57);
+        clawPosition = (0.25);
+        wristPosition = (0.853);
+        armPosition = (0.635);
     }
 }
