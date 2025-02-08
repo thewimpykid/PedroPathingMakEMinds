@@ -26,6 +26,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
@@ -136,6 +137,7 @@ public class Follower {
     private double[] driveErrors;
     private double rawDriveError;
     private double previousRawDriveError;
+    private ElapsedTime zeroVelocityDetectedTimer;
 
     public static boolean drawOnDashboard = true;
     public static boolean useTranslational = true;
@@ -286,6 +288,8 @@ public class Follower {
     public void setCurrentPoseWithOffset(Pose set) {
         poseUpdater.setCurrentPoseWithOffset(set);
     }
+
+
 
     /**
      * This sets the offset for only the x position.

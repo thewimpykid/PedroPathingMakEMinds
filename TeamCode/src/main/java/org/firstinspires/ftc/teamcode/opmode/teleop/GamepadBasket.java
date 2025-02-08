@@ -31,7 +31,7 @@ public class GamepadBasket extends LinearOpMode {
     double wristPosition = 0.5;
 
     private final Pose observationPose = new Pose(5, 30, Math.toRadians(180));
-    private final Pose parkPose = new Pose (52, 100, Math.toRadians(270));
+    private final Pose parkPose = new Pose(0, 50, Math.toRadians(180));
 
     private final Pose bucketPose = new Pose(6.5, 131.5, Math.toRadians(315));
 
@@ -130,7 +130,7 @@ public class GamepadBasket extends LinearOpMode {
 
 
             } else {
-                slide.setPowerSlide(0);
+                slide.setPowerSlide(0.0001);
             }
 
 //            if (slide.sendPosition() < -2350 && arm.sendPosition() > -1500) {
@@ -150,11 +150,11 @@ public class GamepadBasket extends LinearOpMode {
                 slide.resetSlide();
             }
 
-            if (gamepad2.left_bumper) {
-                wristPosition += 0.001;
-            }
             if (gamepad2.right_bumper) {
-                wristPosition -= 0.001;
+                wristPosition += 0.005;
+            }
+            if (gamepad2.left_bumper) {
+                wristPosition -= 0.005;
             }
 
             if (gamepad2.left_trigger > 0) {
@@ -202,6 +202,10 @@ public class GamepadBasket extends LinearOpMode {
             if (gamepad1.y) {
                 follower.breakFollowing();
                 follower.startTeleopDrive();
+            }
+
+            if (gamepad2.a) {
+                slide.setPosition(-100, 1.0);
             }
 
             claw.setClawPosition(clawPosition);

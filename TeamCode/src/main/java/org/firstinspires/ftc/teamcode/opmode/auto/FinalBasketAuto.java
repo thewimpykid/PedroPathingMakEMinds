@@ -16,26 +16,31 @@ import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.PathChain;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Point;
 import org.firstinspires.ftc.teamcode.pedroPathing.util.Timer;
 
-@Autonomous(name="BasketAutoNewClaw")
-public class BasketAutoNewClaw extends LinearOpMode {
+@Autonomous(name="FinalBasketAuto")
+public class FinalBasketAuto extends LinearOpMode {
     private Follower follower;
     private Timer pathTimer, actionTimer, opmodeTimer;
 
     private int pathState;
 
     private final Pose startPose = new Pose(0, 112, Math.toRadians(270));
-    private final Pose bucketPose = new Pose(10.5, 128.5, Math.toRadians(315));
+    private final Pose bucketPose = new Pose(9.5, 129.5, Math.toRadians(315));
     private final Pose parkPose = new Pose (52, 99, Math.toRadians(270));
 
-    private final Pose sample1Pose = new Pose(25.5, 121.5, Math.toRadians(0));
+    private final Pose sample1Pose = new Pose(26.5, 121.5, Math.toRadians(0));
 
-    private final Pose sample2Pose = new Pose(25.5, 132, Math.toRadians(0));
+    private final Pose sample2Pose = new Pose(26.5, 132, Math.toRadians(0));
     private final Pose sample3Pose = new Pose(24, 130, Math.toRadians(45)); // 128
 
     private Path path, goToSample1, basketFromSample1, goToSample2, basketFromSample2, goToSample3, basketFromSample3, goPark;
     private Claw claw;
     private Slide slide;
     private Arm arm;
+
+    private int ARM_POSITION_EXTEND = 2850;
+    private int SLIDE_POSITION_EXTEND = 2800;
+
+    private int ARM_POSITION_DOWN = 700;
 
     public void buildPaths() {
         // Build the hangSpecimen1 PathChain
@@ -109,20 +114,20 @@ public class BasketAutoNewClaw extends LinearOpMode {
                 // Follow the hangSpecimen1 PathChain
                 follower.followPath(path, true);  // holdEnd is true to allow corrections
 //                arm.setPosition(-3750, 1.0); // this is the old arm position
-                arm.setPosition(-2900, 0.7);
+                arm.setPosition(-ARM_POSITION_EXTEND, 0.7);
 
                 setPathState(1);
                 break;
             case 1:
                 if (arm.sendPosition() < -500) {
-                    slide.setPosition(-2700, 1.0);
+                    slide.setPosition(-SLIDE_POSITION_EXTEND, 1.0);
                     setPathState(2);
                 }
                 break;
 
             case 2:
-                if(!follower.isBusy() && slide.sendPosition() < -2700) {
-                    arm.setPosition(-2900, 1.0);
+                if(!follower.isBusy() && slide.sendPosition() < -SLIDE_POSITION_EXTEND) {
+                    arm.setPosition(-ARM_POSITION_EXTEND, 1.0);
                     claw.setClawPosition(0.25);
                     setPathState(3);
                 }
@@ -139,7 +144,7 @@ public class BasketAutoNewClaw extends LinearOpMode {
 
 
                     if ( slide.sendPosition() > -500) {
-                        arm.setPosition(700, 1.0);
+                        arm.setPosition(ARM_POSITION_DOWN, 1.0);
                         follower.followPath(goToSample1);
                         pickupBasket(0);
                         setPathState(5);
@@ -160,20 +165,20 @@ public class BasketAutoNewClaw extends LinearOpMode {
                     follower.followPath(basketFromSample1, true);  // holdEnd is true to allow corrections
 //                arm.setPosition(-3750, 1.0); // this is the old arm position
                     initBasket();
-                    arm.setPosition(-2900, 0.7);
+                    arm.setPosition(-ARM_POSITION_EXTEND, 0.7);
 
                     setPathState(7);
                 }
                 break;
             case 7:
-                if (arm.sendPosition() < 750 && !follower.isBusy()) {
-                    slide.setPosition(-2700, 1.0);
+                if (arm.sendPosition() < 250 || !follower.isBusy()) {
+                    slide.setPosition(-SLIDE_POSITION_EXTEND, 1.0);
                     setPathState(8);
                 }
                 break;
             case 8:
                 if (pathTimer.getElapsedTimeSeconds() > 0.5 && slide.sendPosition() < -2600 && arm.sendPosition() < -2350) {
-                    arm.setPosition(-2900, 1.0);
+                    arm.setPosition(-ARM_POSITION_EXTEND, 1.0);
                     claw.setClawPosition(0.25); // 0.6
                     setPathState(9);
                 }
@@ -190,7 +195,7 @@ public class BasketAutoNewClaw extends LinearOpMode {
 
 
                     if ( slide.sendPosition() > -500) {
-                        arm.setPosition(700, 1.0);
+                        arm.setPosition(ARM_POSITION_DOWN, 1.0);
                         follower.followPath(goToSample2);
                         pickupBasket(0);
                         setPathState(11);
@@ -211,23 +216,23 @@ public class BasketAutoNewClaw extends LinearOpMode {
                     follower.followPath(basketFromSample2, true);  // holdEnd is true to allow corrections
 //                arm.setPosition(-3750, 1.0); // this is the old arm position
                     initBasket();
-                    arm.setPosition(-2900, 0.7);
+                    arm.setPosition(-ARM_POSITION_EXTEND, 0.7);
 
                     setPathState(13);
                 }
                 break;
             case 13:
-                if (arm.sendPosition() < 750 && !follower.isBusy()) {
-                    slide.setPosition(-2700, 1.0);
+                if (arm.sendPosition() < 250 || !follower.isBusy()) {
+                    slide.setPosition(-SLIDE_POSITION_EXTEND, 1.0);
                     setPathState(14);
                 }
                 break;
             case 14:
                 if (pathTimer.getElapsedTimeSeconds() > 0.5 && slide.sendPosition() < -2600 && arm.sendPosition() < -2350) {
-                    arm.setPosition(-2900, 1.0);
+                    arm.setPosition(-ARM_POSITION_EXTEND, 1.0);
                     claw.setClawPosition(0.25);
 
-                     // 0.6
+                    // 0.6
                     setPathState(15);
                 }
                 break;
@@ -265,20 +270,20 @@ public class BasketAutoNewClaw extends LinearOpMode {
                     follower.followPath(basketFromSample3, true);  // holdEnd is true to allow corrections
 //                arm.setPosition(-3750, 1.0); // this is the old arm position
                     initBasket();
-                    arm.setPosition(-2900, 0.6);
+                    arm.setPosition(-ARM_POSITION_EXTEND, 0.6);
 
                     setPathState(19);
                 }
                 break;
             case 19:
-                if (arm.sendPosition() < 750 && !follower.isBusy()) {
-                    slide.setPosition(-2700, 1.0);
+                if (arm.sendPosition() < 250 || !follower.isBusy()) {
+                    slide.setPosition(-SLIDE_POSITION_EXTEND, 1.0);
                     setPathState(20);
                 }
                 break;
             case 20:
-                if (pathTimer.getElapsedTimeSeconds() > 0.5 && slide.sendPosition() < -2700 && arm.sendPosition() < -2350) {
-                    arm.setPosition(-2900, 1.0);
+                if (pathTimer.getElapsedTimeSeconds() > 0.5 && slide.sendPosition() < -SLIDE_POSITION_EXTEND && arm.sendPosition() < -2350) {
+                    arm.setPosition(-ARM_POSITION_EXTEND, 1.0);
                     claw.setClawPosition(0.25); // 0.6
                     setPathState(21);
                 }
