@@ -151,10 +151,10 @@ public class GamepadBasket extends LinearOpMode {
             }
 
             if (gamepad2.right_bumper) {
-                wristPosition += 0.005;
+                wristPosition += 0.01;
             }
             if (gamepad2.left_bumper) {
-                wristPosition -= 0.005;
+                wristPosition -= 0.01;
             }
 
             if (gamepad2.left_trigger > 0) {
