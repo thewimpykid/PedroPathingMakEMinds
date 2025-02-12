@@ -14,19 +14,19 @@ import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.PathChain;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Point;
 import org.firstinspires.ftc.teamcode.pedroPathing.util.Timer;
 
-@Autonomous(name="NewFiveSpecAuto")
-public class NewFiveSpecAuto extends LinearOpMode {
+@Autonomous(name="FinalFiveSpec")
+public class FinalFiveSpec extends LinearOpMode {
     private Follower follower;
     private Timer pathTimer, actionTimer, opmodeTimer;
     private int pathState;
     private final Pose observationPose = new Pose(5.75, 30, Math.toRadians(180));
-    private final Pose startPose = new Pose(0, 50, Math.toRadians(180));
-    private final Pose chamberPose = new Pose(29, 65, Math.toRadians(180));
+    private final Pose startPose = new Pose(0, 57, Math.toRadians(180));
+    private final Pose chamberPose = new Pose(29, 60.5, Math.toRadians(180));
     private Claw claw;
     private Slide slide;
     private Arm arm;
     private int counter = 0;
-    private double yPlace = 62.5;
+    private double yPlace = 58.5;
     private PathChain hangSpecimen1, goToSamples;
     private Path goBack, pickSpecimen, placeSpecimen, placeSpecimen2, pickMore;
 
@@ -34,7 +34,7 @@ public class NewFiveSpecAuto extends LinearOpMode {
         hangSpecimen1 = follower.pathBuilder()
                 .addPath(new BezierLine(new Point(startPose), new Point(chamberPose))) // First path
                 .setLinearHeadingInterpolation(startPose.getHeading(), chamberPose.getHeading())// Heading interpolation
-//                .setZeroPowerAccelerationMultiplier(1.25)
+                .setZeroPowerAccelerationMultiplier(2)
                 .build();
 
         goBack = new Path(
@@ -47,17 +47,17 @@ public class NewFiveSpecAuto extends LinearOpMode {
         pickSpecimen = new Path(new BezierLine(new Point(follower.getPose()), new Point(observationPose)));
         pickSpecimen.setPathEndVelocityConstraint(0);
 
-        placeSpecimen = new Path(new BezierLine(new Point(5, 3, Point.CARTESIAN),
-//                new Point(0, 70, Point.CARTESIAN),
+        placeSpecimen = new Path(new BezierCurve(new Point(5.75, 3, Point.CARTESIAN),
+                new Point(20, 10, Point.CARTESIAN),
+                new Point(0, 30, Point.CARTESIAN),
                 new Point(28.5, yPlace, Point.CARTESIAN)));
         placeSpecimen.setConstantHeadingInterpolation(Math.toRadians(180));
-        placeSpecimen.setPathEndVelocityConstraint(5);
-        placeSpecimen.setZeroPowerAccelerationMultiplier(0.5);
-//        placeSpecimen.setZeroPowerAccelerationMultiplier(1.25);
+        placeSpecimen.setPathEndVelocityConstraint(2.5);
+        placeSpecimen.setZeroPowerAccelerationMultiplier(2.5);
 
-        placeSpecimen2 = new Path(new BezierLine(new Point(4.75, 25, Point.CARTESIAN), new Point(28.5, yPlace, Point.CARTESIAN)));
+        placeSpecimen2 = new Path(new BezierLine(new Point(5.5, 25, Point.CARTESIAN), new Point(28.5, yPlace, Point.CARTESIAN)));
         placeSpecimen2.setConstantHeadingInterpolation(Math.toRadians(180));
-        placeSpecimen2.setZeroPowerAccelerationMultiplier(0.85);
+        placeSpecimen2.setZeroPowerAccelerationMultiplier(2);
 //        placeSpecimen2.setZeroPowerAccelerationMultiplier(1.25);
 
         pickMore = new Path( new BezierLine(
@@ -81,12 +81,12 @@ public class NewFiveSpecAuto extends LinearOpMode {
                 .addPath(new BezierCurve( // First path - straight line
                         new Point(46, 20, Point.CARTESIAN),
                         new Point(25, 18, Point.CARTESIAN),
-                        new Point(16, 18, Point.CARTESIAN)
+                        new Point(17.5, 18, Point.CARTESIAN)
                 ))
                 .setConstantHeadingInterpolation(Math.toRadians(180))
 
                 .addPath(new BezierCurve( // First path - Bezier curve
-                        new Point(16, 18, Point.CARTESIAN),
+                        new Point(17.5, 18, Point.CARTESIAN),
                         new Point(44, 23, Point.CARTESIAN),
                         new Point(47.5, 10, Point.CARTESIAN)
                 ))
@@ -95,25 +95,25 @@ public class NewFiveSpecAuto extends LinearOpMode {
 
                 .addPath(new BezierLine( // First path - Bezier curve
                         new Point(47.5, 10, Point.CARTESIAN),
-                        new Point(18, 10, Point.CARTESIAN)
+                        new Point(17.5, 10, Point.CARTESIAN)
                 ))
                 .setConstantHeadingInterpolation(Math.toRadians(180))
                 .setPathEndVelocityConstraint(5)
 
                 .addPath(new BezierCurve( // First path - Bezier curve
-                        new Point(18, 10, Point.CARTESIAN),
+                        new Point(17.5, 10, Point.CARTESIAN),
                         new Point(26, 18, Point.CARTESIAN),
                         new Point(36, 4.5, Point.CARTESIAN)
                 ))
                 .setConstantHeadingInterpolation(Math.toRadians(180))
-                .setPathEndVelocityConstraint(5)
+
 
                 .addPath(new BezierLine( // First path - Bezier curve
                         new Point(36, 4.5, Point.CARTESIAN),
                         new Point(5.75, 2.5, Point.CARTESIAN)
                 ))
                 .setConstantHeadingInterpolation(Math.toRadians(180))
-                .setZeroPowerAccelerationMultiplier(2.5)
+                .setZeroPowerAccelerationMultiplier(3.5)
                 // third specimen
                 .build();
 
@@ -128,25 +128,25 @@ public class NewFiveSpecAuto extends LinearOpMode {
             case 0:
                 // Logic for this case without paths
                 follower.followPath(hangSpecimen1, true);
-                follower.setMaxPower(0.8);
+                follower.setMaxPower(1.0);
                 arm.setPosition(-2600, 1.0);
                 slide.setPosition(-100, 1.0);
                 setPathState(1); // Set pathState to 1 (you can modify this based on desired flow)
                 break;
             case 1:
                 if (!follower.isBusy()) {
-                    slide.setPosition(-1250, 1.0);
+                    slide.setPosition(-850, 1.0);
 //                    claw.setArmPosition(0.7);
                     setPathState(2);
                 } else if (follower.getVelocity().getMagnitude() < 1.0 && follower.getCurrentPath().getClosestPointTValue() > 0.8 && follower.isBusy()) {
                     follower.breakFollowing();
-                    slide.setPosition(-1250, 1.0);
+                    slide.setPosition(-850, 1.0);
 //                    claw.setArmPosition(0.7);
                     setPathState(2);
                 }
                 break;
             case 2:
-                if (slide.sendPosition() < -1050) {
+                if (slide.sendPosition() < -800) {
                     follower.setMaxPower(1.0);
                     claw.setClawPosition(0.5);
                     setPathState(3);
@@ -191,7 +191,7 @@ public class NewFiveSpecAuto extends LinearOpMode {
                 }
                 break;
             case 7:
-                if(pathTimer.getElapsedTimeSeconds() > 0.5) {
+                if(pathTimer.getElapsedTimeSeconds() > 0.25) {
 
 //                    if (pathTimer.getElapsedTimeSeconds() > 0.5) {
 
@@ -202,27 +202,48 @@ public class NewFiveSpecAuto extends LinearOpMode {
                     setClawPut();
                     if (follower.getPose().getX() > 10) {
                         slide.setPosition(-300, 0.5);
-                            setPathState(8);
+                        setPathState(8);
 
 
                     }
                 }
                 break;
             case 8:
+                if (!follower.isBusy()) {
+                    slide.setPosition(-900, 1.0);
+//                    claw.setArmPosition(0.7);
+                    setPathState(18);
+                } else if (follower.getVelocity().getMagnitude() < 1.0 && follower.getCurrentPath().getClosestPointTValue() > 0.8 && follower.isBusy()) {
+                    follower.breakFollowing();
+                    slide.setPosition(-900, 1.0);
+                    setPathState(18);
+                }
+                break;
+            case 18:
+                if (pathTimer.getElapsedTimeSeconds() > 0.25 && counter < 3 && slide.sendPosition() < -850) {
+                    arm.setPosition(325, 1);
+                    slide.setPosition(0, 1);
+
+                    setClawLoad();
+                    counter++;
+                    follower.followPath(pickMore);
+                    setPathState(10);
+                }
+                break;
             case 12:
 
                 if (!follower.isBusy()) {
-                    slide.setPosition(-1250, 1.0);
+                    slide.setPosition(-850, 1.0);
 //                    claw.setArmPosition(0.7);
                     setPathState(9);
                 } else if (follower.getVelocity().getMagnitude() < 1.0 && follower.getCurrentPath().getClosestPointTValue() > 0.8 && follower.isBusy()) {
                     follower.breakFollowing();
-                    slide.setPosition(-1250, 1.0);
+                    slide.setPosition(-850, 1.0);
                     setPathState(9);
                 }
                 break;
             case 9:
-                if (pathTimer.getElapsedTimeSeconds() > 0.5 && counter < 3 && slide.sendPosition() < -1050) {
+                if (pathTimer.getElapsedTimeSeconds() > 0.25 && counter < 3 && slide.sendPosition() < -800) {
                     arm.setPosition(325, 1);
                     slide.setPosition(0, 1);
 
@@ -251,9 +272,9 @@ public class NewFiveSpecAuto extends LinearOpMode {
                     if (!follower.isBusy()) {
 
                         if (counter == 1) {
-                            yPlace = yPlace - 3;
+                            yPlace = yPlace - 1;
                         } else {
-                            yPlace = yPlace - 2;
+                            yPlace = yPlace - 1;
                         }
                     }
 
@@ -266,10 +287,10 @@ public class NewFiveSpecAuto extends LinearOpMode {
                         follower.followPath(placeSpecimen2, true);
                     }
                     if (follower.getPose().getX() > 10) {
-                            slide.setPosition(-200, 0.5);
-                            if (slide.sendPosition() < -150) {
-                                setPathState(8);
-                            }
+                        slide.setPosition(-200, 0.5);
+                        if (slide.sendPosition() < -150) {
+                            setPathState(8);
+                        }
 
 
                     }

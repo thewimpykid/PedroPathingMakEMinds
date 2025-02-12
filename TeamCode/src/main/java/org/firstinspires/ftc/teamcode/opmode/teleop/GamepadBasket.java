@@ -26,12 +26,12 @@ public class GamepadBasket extends LinearOpMode {
     private Follower follower;
     private boolean isArmDoing = false;
 
-    double clawPosition = 0.25;
+    double clawPosition = 1;
     double armPosition = 0.5;
     double wristPosition = 0.5;
 
     private final Pose observationPose = new Pose(5, 30, Math.toRadians(180));
-    private final Pose parkPose = new Pose(0, 50, Math.toRadians(180));
+    private final Pose parkPose = new Pose(0, 50, Math.toRadians(270));
 
     private final Pose bucketPose = new Pose(6.5, 131.5, Math.toRadians(315));
 
@@ -187,6 +187,7 @@ public class GamepadBasket extends LinearOpMode {
             if (gamepad1.right_bumper) {
                 setScorePosClaw();
             }
+
 
 //            if (gamepad2.left_bumper) {
 //                wristPosition += 0.015;
