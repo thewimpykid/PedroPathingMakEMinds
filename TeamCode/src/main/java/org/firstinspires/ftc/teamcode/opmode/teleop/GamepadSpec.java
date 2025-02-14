@@ -112,9 +112,9 @@ public class GamepadSpec extends LinearOpMode {
 
             // THIS IS THE ALREADY WORKING CODE BELOW
             if (gamepad2.right_stick_y != 0.0) {
-
+                if (arm.sendPosition() > -2750 || gamepad2.right_stick_y > 0.0)
                     arm.setPowerArm(gamepad2.right_stick_y);
-
+                else arm.setPowerArm(0);
 
 
             } else {
@@ -122,36 +122,22 @@ public class GamepadSpec extends LinearOpMode {
 
             }
 
-            if (arm.sendPosition() < -2500) {
-                arm.setPosition(-2450, 1.0);
-            }
-
-            if (slide.sendPosition() < -2350 && arm.sendPosition() > -1500) { // slide limit
-                slide.setPosition(-2300, 1.0);
-            } else {
-                slide.setModeEncoder();
-            }
-//            if (arm.sendPosition() < -2000) {
-//                arm.setPosition(-1950, 1.0);
-//            }
-
             // SLIDE WORKING CODE BELOW
             if (gamepad2.left_stick_y != 0.0) {
-                if ((slide.sendPosition() > -2350 || arm.sendPosition() < -1500)){
-                    slide.setModeEncoder();
+                if (slide.sendPosition() > -1800 || gamepad2.left_stick_y > 0.0 || arm.sendPosition() < -1500){
                     slide.setPowerSlide(gamepad2.left_stick_y);
+                } else {
+                    slide.setPowerSlide(0);
                 }
-
-
             } else {
                 slide.setPowerSlide(0.0001);
             }
 
-//            if (slide.sendPosition() < -2350 && arm.sendPosition() > -1500) {
-//                slide.setPosition(-2300, 1.0);
-//            } else {
-//                slide.setModeEncoder();
-//            }
+            if (slide.sendPosition() < -1750 && arm.sendPosition() > -1500) {
+                slide.setPosition(-1700, 1.0);
+            } else {
+                slide.setModeEncoder();
+            }
 
             if (gamepad2.y) {
                 clawPosition = 0.25;

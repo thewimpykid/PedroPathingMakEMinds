@@ -9,12 +9,12 @@ import org.firstinspires.ftc.teamcode.config.subsystem.Arm;
 @Autonomous(name = "ArmReset")
 public class GoToStart extends LinearOpMode {
 
-    Arm arm = new Arm("armMotor", hardwareMap);
+    Arm arm;
     @Override
     public void runOpMode() throws InterruptedException {
 
         // Set arm to run to position mode without resetting encoder
-
+        arm = new Arm("armMotor", hardwareMap);
         waitForStart();
 
 
