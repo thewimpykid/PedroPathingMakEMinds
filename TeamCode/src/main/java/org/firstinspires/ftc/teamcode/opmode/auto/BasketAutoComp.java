@@ -17,6 +17,7 @@ import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Point;
 import org.firstinspires.ftc.teamcode.pedroPathing.util.Timer;
 
 @Autonomous(name="BasketAutoComp")
+@Disabled()
 public class BasketAutoComp extends LinearOpMode {
     private Follower follower;
     private Timer pathTimer, actionTimer, opmodeTimer;

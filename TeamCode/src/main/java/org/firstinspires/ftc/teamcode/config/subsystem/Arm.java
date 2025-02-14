@@ -11,7 +11,6 @@ public class Arm{
 
     public Arm(String armName, HardwareMap hardwareMap) {
         this.arm = hardwareMap.get(DcMotorEx.class, armName);
-        arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
     public int sendPosition() {
@@ -24,9 +23,7 @@ public class Arm{
     }
 
     public void resetArm() {
-        arm.setTargetPosition(0);
-        arm.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-        arm.setPower(1.0);
+        arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 
     public void setPowerArm(double power) {

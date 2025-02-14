@@ -16,6 +16,8 @@ import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.PathChain;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Point;
 import org.firstinspires.ftc.teamcode.pedroPathing.util.Timer;
 
+
+@Disabled()
 @Autonomous(name="TestAuto")
 public class TestAuto extends LinearOpMode {
     private Follower follower;

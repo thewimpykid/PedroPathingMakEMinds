@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.opmode.teleop;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -20,7 +21,7 @@ import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Point;
  *
  * @version 2.0, 11/28/2024
  */
-
+@Disabled()
 @TeleOp(name = "GamepadWithAcceleration")
 public class GamepadWithAcceleration extends LinearOpMode {
 

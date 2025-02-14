@@ -17,6 +17,7 @@ import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Point;
 import org.firstinspires.ftc.teamcode.pedroPathing.util.Timer;
 
 @Autonomous(name="BasketAutoNewClaw")
+@Disabled()
 public class BasketAutoNewClaw extends LinearOpMode {
     private Follower follower;
     private Timer pathTimer, actionTimer, opmodeTimer;

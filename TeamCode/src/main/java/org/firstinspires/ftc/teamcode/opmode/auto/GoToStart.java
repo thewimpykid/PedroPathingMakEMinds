@@ -4,10 +4,12 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-@Autonomous(name = "GOTOSTART")
+import org.firstinspires.ftc.teamcode.config.subsystem.Arm;
+
+@Autonomous(name = "ArmReset")
 public class GoToStart extends LinearOpMode {
 
-//    DcMotor arm;
+    Arm arm = new Arm("armMotor", hardwareMap);
     @Override
     public void runOpMode() throws InterruptedException {
 
@@ -15,27 +17,22 @@ public class GoToStart extends LinearOpMode {
 
         waitForStart();
 
-        DcMotor arm = hardwareMap.get(DcMotor.class, "armMotor");
-        arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        arm.resetArm();
 
 
         // Set the target position for the arm (position 0)
 
-        arm.setTargetPosition(0);
-        arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        // Set motor power to move the arm to position 0
-        arm.setPower(0.5); // Adjust power as necessary
+        arm.setPosition(200, 0.25);
+        // Adjust power as necessary
 
-        waitForStart();
 
         // Wait until the arm reaches the target position
-        while (opModeIsActive() && arm.isBusy()) {
-            telemetry.addData("Arm Position", arm.getCurrentPosition());
-            telemetry.addData("Target Position", arm.getTargetPosition());
+        while (opModeIsActive()) {
+            telemetry.addData("Arm Position", arm.sendPosition());
             telemetry.update();
         }
 
         // Once the arm reaches the target, stop it
-        arm.setPower(0);
     }
 }

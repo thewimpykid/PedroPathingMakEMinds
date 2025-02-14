@@ -42,6 +42,7 @@ public class FinalFiveSpec extends LinearOpMode {
                         new Point(follower.getPose())
                         ,new Point(19, 59, Point.CARTESIAN)));
         goBack.setConstantHeadingInterpolation(chamberPose.getHeading());
+        goBack.setZeroPowerAccelerationMultiplier(0.9);
 //        goBack.setZeroPowerAccelerationMultiplier(1.25);
 
         pickSpecimen = new Path(new BezierLine(new Point(follower.getPose()), new Point(observationPose)));
@@ -49,13 +50,13 @@ public class FinalFiveSpec extends LinearOpMode {
 
         placeSpecimen = new Path(new BezierCurve(new Point(5.75, 3, Point.CARTESIAN),
                 new Point(20, 10, Point.CARTESIAN),
-                new Point(0, 30, Point.CARTESIAN),
+                new Point(0, 35, Point.CARTESIAN),
                 new Point(28.5, yPlace, Point.CARTESIAN)));
         placeSpecimen.setConstantHeadingInterpolation(Math.toRadians(180));
-        placeSpecimen.setPathEndVelocityConstraint(2.5);
-        placeSpecimen.setZeroPowerAccelerationMultiplier(2.5);
+        placeSpecimen.setPathEndVelocityConstraint(5);
+        placeSpecimen.setZeroPowerAccelerationMultiplier(5);
 
-        placeSpecimen2 = new Path(new BezierLine(new Point(5.5, 25, Point.CARTESIAN), new Point(28.5, yPlace, Point.CARTESIAN)));
+        placeSpecimen2 = new Path(new BezierLine(new Point(5.5, 26, Point.CARTESIAN), new Point(28.5, yPlace, Point.CARTESIAN)));
         placeSpecimen2.setConstantHeadingInterpolation(Math.toRadians(180));
         placeSpecimen2.setZeroPowerAccelerationMultiplier(2);
 //        placeSpecimen2.setZeroPowerAccelerationMultiplier(1.25);
@@ -64,7 +65,7 @@ public class FinalFiveSpec extends LinearOpMode {
                 new Point(34.000, 65.000, Point.CARTESIAN),
 //                new Point(13.000, 63.250, Point.CARTESIAN),
 //                new Point(34.000, 32.500, Point.CARTESIAN),
-                new Point(5.5, 25, Point.CARTESIAN)
+                new Point(5.5, 26, Point.CARTESIAN)
         ));
         pickMore.setConstantHeadingInterpolation(Math.toRadians(180));
         pickMore.setZeroPowerAccelerationMultiplier(3);
@@ -75,16 +76,19 @@ public class FinalFiveSpec extends LinearOpMode {
                         new Point(19.000, 59.000, Point.CARTESIAN),
                         new Point(25, 17, Point.CARTESIAN),
                         new Point(40, 39, Point.CARTESIAN),
-                        new Point(46, 20, Point.CARTESIAN)
+                        new Point(46, 22.5, Point.CARTESIAN)
                 ))
+                .setZeroPowerAccelerationMultiplier(5)
+                .setPathEndVelocityConstraint(5)
                 .setConstantHeadingInterpolation(Math.toRadians(180)) // Heading interpolation
                 .addPath(new BezierCurve( // First path - straight line
-                        new Point(46, 20, Point.CARTESIAN),
+                        new Point(46, 22.5, Point.CARTESIAN),
                         new Point(25, 18, Point.CARTESIAN),
                         new Point(17.5, 18, Point.CARTESIAN)
                 ))
+                .setZeroPowerAccelerationMultiplier(5)
                 .setConstantHeadingInterpolation(Math.toRadians(180))
-
+                .setPathEndVelocityConstraint(5)
                 .addPath(new BezierCurve( // First path - Bezier curve
                         new Point(17.5, 18, Point.CARTESIAN),
                         new Point(44, 23, Point.CARTESIAN),
@@ -92,6 +96,7 @@ public class FinalFiveSpec extends LinearOpMode {
                 ))
                 .setConstantHeadingInterpolation(Math.toRadians(180))
                 .setPathEndVelocityConstraint(5)
+                .setZeroPowerAccelerationMultiplier(5)
 
                 .addPath(new BezierLine( // First path - Bezier curve
                         new Point(47.5, 10, Point.CARTESIAN),
@@ -99,17 +104,19 @@ public class FinalFiveSpec extends LinearOpMode {
                 ))
                 .setConstantHeadingInterpolation(Math.toRadians(180))
                 .setPathEndVelocityConstraint(5)
+                .setZeroPowerAccelerationMultiplier(5)
 
                 .addPath(new BezierCurve( // First path - Bezier curve
                         new Point(17.5, 10, Point.CARTESIAN),
                         new Point(26, 18, Point.CARTESIAN),
-                        new Point(36, 4.5, Point.CARTESIAN)
+                        new Point(37, 4.5, Point.CARTESIAN)
                 ))
                 .setConstantHeadingInterpolation(Math.toRadians(180))
+                .setZeroPowerAccelerationMultiplier(0.5)
 
 
                 .addPath(new BezierLine( // First path - Bezier curve
-                        new Point(36, 4.5, Point.CARTESIAN),
+                        new Point(37, 4.5, Point.CARTESIAN),
                         new Point(5.75, 2.5, Point.CARTESIAN)
                 ))
                 .setConstantHeadingInterpolation(Math.toRadians(180))
@@ -134,11 +141,11 @@ public class FinalFiveSpec extends LinearOpMode {
                 setPathState(1); // Set pathState to 1 (you can modify this based on desired flow)
                 break;
             case 1:
-                if (!follower.isBusy()) {
+                if (!follower.isBusy() && arm.sendPosition() < -2500) {
                     slide.setPosition(-850, 1.0);
 //                    claw.setArmPosition(0.7);
                     setPathState(2);
-                } else if (follower.getVelocity().getMagnitude() < 1.0 && follower.getCurrentPath().getClosestPointTValue() > 0.8 && follower.isBusy()) {
+                } else if (follower.getVelocity().getMagnitude() < 1.0 && follower.getCurrentPath().getClosestPointTValue() > 0.8 && follower.isBusy() && arm.sendPosition() < -2500) {
                     follower.breakFollowing();
                     slide.setPosition(-850, 1.0);
 //                    claw.setArmPosition(0.7);
@@ -191,7 +198,7 @@ public class FinalFiveSpec extends LinearOpMode {
                 }
                 break;
             case 7:
-                if(pathTimer.getElapsedTimeSeconds() > 0.25) {
+                if(pathTimer.getElapsedTimeSeconds() > 0.1) {
 
 //                    if (pathTimer.getElapsedTimeSeconds() > 0.5) {
 
@@ -220,7 +227,7 @@ public class FinalFiveSpec extends LinearOpMode {
                 }
                 break;
             case 18:
-                if (pathTimer.getElapsedTimeSeconds() > 0.25 && counter < 3 && slide.sendPosition() < -850) {
+                if (pathTimer.getElapsedTimeSeconds() > 0.1 && counter < 3 && slide.sendPosition() < -850) {
                     arm.setPosition(325, 1);
                     slide.setPosition(0, 1);
 
@@ -243,7 +250,7 @@ public class FinalFiveSpec extends LinearOpMode {
                 }
                 break;
             case 9:
-                if (pathTimer.getElapsedTimeSeconds() > 0.25 && counter < 3 && slide.sendPosition() < -800) {
+                if (pathTimer.getElapsedTimeSeconds() > 0.25 && counter < 4 && slide.sendPosition() < -800) {
                     arm.setPosition(325, 1);
                     slide.setPosition(0, 1);
 
@@ -314,6 +321,7 @@ public class FinalFiveSpec extends LinearOpMode {
         claw = new Claw(hardwareMap);
         slide = new Slide("slideMotor", hardwareMap);
         arm = new Arm("armMotor", hardwareMap);
+//        arm.resetArm();
         pathTimer = new Timer();
         opmodeTimer = new Timer();
 

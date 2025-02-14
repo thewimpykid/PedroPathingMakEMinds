@@ -112,7 +112,9 @@ public class GamepadSpec extends LinearOpMode {
 
             // THIS IS THE ALREADY WORKING CODE BELOW
             if (gamepad2.right_stick_y != 0.0) {
-                arm.setPowerArm(gamepad2.right_stick_y);
+
+                    arm.setPowerArm(gamepad2.right_stick_y);
+
 
 
             } else {
@@ -120,13 +122,25 @@ public class GamepadSpec extends LinearOpMode {
 
             }
 
+            if (arm.sendPosition() < -2500) {
+                arm.setPosition(-2450, 1.0);
+            }
+
+            if (slide.sendPosition() < -2350 && arm.sendPosition() > -1500) { // slide limit
+                slide.setPosition(-2300, 1.0);
+            } else {
+                slide.setModeEncoder();
+            }
 //            if (arm.sendPosition() < -2000) {
 //                arm.setPosition(-1950, 1.0);
 //            }
 
             // SLIDE WORKING CODE BELOW
             if (gamepad2.left_stick_y != 0.0) {
-                slide.setPowerSlide(gamepad2.left_stick_y);
+                if ((slide.sendPosition() > -2350 || arm.sendPosition() < -1500)){
+                    slide.setModeEncoder();
+                    slide.setPowerSlide(gamepad2.left_stick_y);
+                }
 
 
             } else {

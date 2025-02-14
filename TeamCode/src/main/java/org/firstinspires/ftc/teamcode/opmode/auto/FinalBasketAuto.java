@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.opmode.auto;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.config.subsystem.Arm;
 import org.firstinspires.ftc.teamcode.config.subsystem.Claw;
@@ -40,7 +41,7 @@ public class FinalBasketAuto extends LinearOpMode {
     private int ARM_POSITION_EXTEND = 2850;
     private int SLIDE_POSITION_EXTEND = 2800;
 
-    private int ARM_POSITION_DOWN = 700;
+    private int ARM_POSITION_DOWN = 775;
 
     public void buildPaths() {
         // Build the hangSpecimen1 PathChain
@@ -100,7 +101,7 @@ public class FinalBasketAuto extends LinearOpMode {
 
         goPark = new Path(new BezierCurve(
                 new Point(bucketPose),
-                new Point(62.000, 114.000, Point.CARTESIAN),
+                new Point(62.000, 112.000, Point.CARTESIAN),
                 new Point(parkPose))
         );
         goPark.setLinearHeadingInterpolation(bucketPose.getHeading(), parkPose.getHeading());
@@ -134,7 +135,8 @@ public class FinalBasketAuto extends LinearOpMode {
                 break;
             case 3:
                 if (pathTimer.getElapsedTimeSeconds() > 0.5) {
-                    claw.setArmPosition(0.6825); // 0.6
+                    claw.setArmPosition(0.6825);
+                    // 0.6
                     setPathState(4);
                 }
                 break;
@@ -152,7 +154,7 @@ public class FinalBasketAuto extends LinearOpMode {
                 }
                 break;
             case 5:
-                if (!follower.isBusy() && pathTimer.getElapsedTimeSeconds() > 0.5) {
+                if (!follower.isBusy() && pathTimer.getElapsedTimeSeconds() > 0.5 && arm.sendPosition() < 750) {
 
                     claw.clawSetPosition(1.0);
                     setPathState(6);
@@ -162,6 +164,7 @@ public class FinalBasketAuto extends LinearOpMode {
                 break;
             case 6:
                 if (pathTimer.getElapsedTimeSeconds() > 0.7) {
+                    slide.resetSlide();
                     follower.followPath(basketFromSample1, true);  // holdEnd is true to allow corrections
 //                arm.setPosition(-3750, 1.0); // this is the old arm position
                     initBasket();
@@ -213,6 +216,7 @@ public class FinalBasketAuto extends LinearOpMode {
                 break;
             case 12:
                 if (pathTimer.getElapsedTimeSeconds() > 0.7) {
+                    slide.resetSlide();
                     follower.followPath(basketFromSample2, true);  // holdEnd is true to allow corrections
 //                arm.setPosition(-3750, 1.0); // this is the old arm position
                     initBasket();
@@ -249,7 +253,7 @@ public class FinalBasketAuto extends LinearOpMode {
 
 
                     if ( slide.sendPosition() > -700) {
-                        arm.setPosition(750, 1.0);
+                        arm.setPosition(775, 1.0);
                         follower.followPath(goToSample3);
                         pickupBasket(0.031);
                         setPathState(17);
@@ -257,7 +261,7 @@ public class FinalBasketAuto extends LinearOpMode {
                 }
                 break;
             case 17:
-                if (!follower.isBusy() && pathTimer.getElapsedTimeSeconds() > 0.5 && arm.sendPosition() > 650) {
+                if (!follower.isBusy() && pathTimer.getElapsedTimeSeconds() > 0.5 && arm.sendPosition() > 750) {
 
                     claw.clawSetPosition(1.0);
                     setPathState(18);

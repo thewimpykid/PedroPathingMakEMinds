@@ -26,12 +26,12 @@ public class Gamepad extends LinearOpMode {
     private Follower follower;
     private boolean isArmDoing = false;
 
-    double clawPosition = 0;
-    double armPosition = 0.623;
-    double wristPosition = 0.86;
+    double clawPosition = 1;
+    double armPosition = 0.5;
+    double wristPosition = 0.5;
 
     private final Pose observationPose = new Pose(5, 30, Math.toRadians(180));
-    private final Pose parkPose = new Pose (52, 100, Math.toRadians(270));
+    private final Pose parkPose = new Pose(0, 50, Math.toRadians(270));
 
     private final Pose bucketPose = new Pose(6.5, 131.5, Math.toRadians(315));
 
@@ -112,38 +112,36 @@ public class Gamepad extends LinearOpMode {
 
             // THIS IS THE ALREADY WORKING CODE BELOW
             if (gamepad2.right_stick_y != 0.0) {
-                if (arm.sendPosition() > -2400 || gamepad2.right_stick_y > 0.0) {
-                    arm.setPowerArm(gamepad2.right_stick_y);
-                }
+                arm.setPowerArm(gamepad2.right_stick_y);
+
 
             } else {
                 arm.setPowerArm(0);
 
             }
 
-            if (arm.sendPosition() < -2500) {
-                arm.setPosition(-2450, 1.0);
-            }
+
 
             // SLIDE WORKING CODE BELOW
             if (gamepad2.left_stick_y != 0.0) {
-                if (slide.sendPosition() > -2300 || gamepad2.left_stick_y > 0.0 || arm.sendPosition() > -1500) {
+                if ((slide.sendPosition() > -2350 || arm.sendPosition() < -1500)){
+                    slide.setModeEncoder();
                     slide.setPowerSlide(gamepad2.left_stick_y);
                 }
 
+
             } else {
-                slide.setPowerSlide(0);
+                slide.setPowerSlide(0.0001);
             }
 
-
-            if (slide.sendPosition() < -2350 && arm.sendPosition() > -2000) {
+            if (slide.sendPosition() < -2350 && arm.sendPosition() > -1500) { // slide limit
                 slide.setPosition(-2300, 1.0);
             } else {
                 slide.setModeEncoder();
             }
 
             if (gamepad2.y) {
-                clawPosition = 0.5;
+                clawPosition = 0.25;
             }
             if (gamepad2.x) {
                 clawPosition = 1.0;
@@ -153,11 +151,11 @@ public class Gamepad extends LinearOpMode {
                 slide.resetSlide();
             }
 
-            if (gamepad2.left_bumper) {
-                wristPosition += 0.001;
-            }
             if (gamepad2.right_bumper) {
-                wristPosition -= 0.001;
+                wristPosition += 0.01;
+            }
+            if (gamepad2.left_bumper) {
+                wristPosition -= 0.01;
             }
 
             if (gamepad2.left_trigger > 0) {
@@ -191,12 +189,13 @@ public class Gamepad extends LinearOpMode {
                 setScorePosClaw();
             }
 
-            if (gamepad2.left_bumper) {
-                wristPosition += 0.015;
-            }
-            if (gamepad2.right_bumper) {
-                wristPosition -= 0.015;
-            }
+
+//            if (gamepad2.left_bumper) {
+//                wristPosition += 0.015;
+//            }
+//            if (gamepad2.right_bumper) {
+//                wristPosition -= 0.015;
+//            }
 
 //            if (slide.sendPosition() > 150) {
 //                slide.setPosition(0, 1.0);
@@ -205,6 +204,10 @@ public class Gamepad extends LinearOpMode {
             if (gamepad1.y) {
                 follower.breakFollowing();
                 follower.startTeleopDrive();
+            }
+
+            if (gamepad2.a) {
+                slide.setPosition(-100, 1.0);
             }
 
             claw.setClawPosition(clawPosition);
@@ -224,21 +227,21 @@ public class Gamepad extends LinearOpMode {
     }
 
     public void setLoadPosClaw() {
-        clawPosition = (0.5);
-        wristPosition = (0.5);
-        armPosition = (0.617);
+        clawPosition = (0.25);
+        wristPosition = (0.85);
+        armPosition = (0.6825);
 
     }
 
     public void setScorePosClaw() {
         clawPosition=(1.0);
-        wristPosition=(0.5);
-        armPosition=(0.505);
+        wristPosition=(0.856);
+        armPosition=(0.572);
     }
 
     public void setPopulatePosClaw() {
-        clawPosition = (0.5);
-        wristPosition = (0.5);
-        armPosition = (0.57);
+        clawPosition = (0.25);
+        wristPosition = (0.853);
+        armPosition = (0.635);
     }
 }
