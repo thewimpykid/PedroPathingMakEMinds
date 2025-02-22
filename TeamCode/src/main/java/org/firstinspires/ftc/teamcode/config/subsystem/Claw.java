@@ -11,11 +11,13 @@ public class Claw {
     private Servo claw;
     private Servo wrist;
     private Servo arm;
+    private Servo dragger;
 
     public Claw(HardwareMap hardwareMap) {
         this.claw = hardwareMap.get(Servo.class, "clawServo");
         this.wrist = hardwareMap.get(Servo.class, "wristServo");
         this.arm = hardwareMap.get(Servo.class, "armServo");
+        this.dragger = hardwareMap.get(Servo.class, "dragger");
     }
 
     public void openClaw() {
@@ -84,6 +86,14 @@ public class Claw {
 
     public void setArmPosition(double position) {
         arm.setPosition(position);
+    }
+
+    public double getDraggerPosition() {
+        return dragger.getPosition();
+    }
+
+    public void setDraggerPosition(double position) {
+        dragger.setPosition(position);
     }
 
     public void initBasket() {

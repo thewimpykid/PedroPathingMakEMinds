@@ -14,4 +14,12 @@ public class RobotConstants {
     public static double startClaw = 0.174;
     public static double groundClaw = 0.835;
     public static double scoringClaw = 0.25;
+
+    public static double ARM_HEIGHT = 8.5;
+
+    public static double SLIDE_CLOSED_LENGTH = 15.5;
+
+    public static double ENC_PER_DEC = 40;
+
+    public static double ENC_PER_INCH = 103.5;
 }

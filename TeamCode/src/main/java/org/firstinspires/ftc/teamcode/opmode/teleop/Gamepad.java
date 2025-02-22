@@ -56,14 +56,7 @@ public class Gamepad extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
-        IMU imu = hardwareMap.get(IMU.class, "imu");
-        IMU.Parameters imuParams = new IMU.Parameters(
-                new RevHubOrientationOnRobot(
-                        RevHubOrientationOnRobot.LogoFacingDirection.RIGHT,
-                        RevHubOrientationOnRobot.UsbFacingDirection.UP
-                )
-        );
-        imu.initialize(imuParams);
+
 
         follower = new Follower(hardwareMap);
         follower.setStartingPose(parkPose);
@@ -120,6 +113,7 @@ public class Gamepad extends LinearOpMode {
             } else {
                 arm.setPowerArm(0);
 
+
             }
 
             // SLIDE WORKING CODE BELOW
@@ -127,7 +121,7 @@ public class Gamepad extends LinearOpMode {
                 if (slide.sendPosition() > -1800 || gamepad2.left_stick_y > 0.0 || arm.sendPosition() < -1500){
                     slide.setPowerSlide(gamepad2.left_stick_y);
                 } else {
-                    slide.setPowerSlide(0);
+                    slide.setPowerSlide(0.0001);
                 }
             } else {
                 slide.setPowerSlide(0.0001);
@@ -204,6 +198,8 @@ public class Gamepad extends LinearOpMode {
                 follower.breakFollowing();
                 follower.startTeleopDrive();
             }
+
+
 
             if (gamepad2.a) {
                 slide.setPosition(-100, 1.0);

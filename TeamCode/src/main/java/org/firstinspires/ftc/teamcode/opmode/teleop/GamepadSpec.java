@@ -10,6 +10,7 @@ import org.firstinspires.ftc.teamcode.config.subsystem.Slide;
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
 import org.firstinspires.ftc.teamcode.pedroPathing.follower.Follower;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.BezierCurve;
+import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.BezierLine;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Path;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Point;
 
@@ -29,13 +30,15 @@ public class GamepadSpec extends LinearOpMode {
     double clawPosition = 1;
     double armPosition = 0.5;
     double wristPosition = 0.5;
+    double draggerPosition = (0.76);
 
     private final Pose observationPose = new Pose(5, 30, Math.toRadians(180));
-    private final Pose parkPose = new Pose(0, 50, Math.toRadians(180));
+    private final Pose parkPose = new Pose(0, 57, Math.toRadians(180));
 
     private final Pose bucketPose = new Pose(6.5, 131.5, Math.toRadians(315));
 
-    private Path goPark;
+
+    private Path goPark, placeSpecimen2;
 
 
     Claw claw;
@@ -56,14 +59,7 @@ public class GamepadSpec extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
-        IMU imu = hardwareMap.get(IMU.class, "imu");
-        IMU.Parameters imuParams = new IMU.Parameters(
-                new RevHubOrientationOnRobot(
-                        RevHubOrientationOnRobot.LogoFacingDirection.RIGHT,
-                        RevHubOrientationOnRobot.UsbFacingDirection.UP
-                )
-        );
-        imu.initialize(imuParams);
+
 
         follower = new Follower(hardwareMap);
         follower.setStartingPose(parkPose);
@@ -76,6 +72,10 @@ public class GamepadSpec extends LinearOpMode {
         arm = new Arm("armMotor", hardwareMap);
         slide = new Slide("slideMotor", hardwareMap);
         claw = new Claw(hardwareMap);
+
+        placeSpecimen2 = new Path(new BezierLine(new Point(5.5, 26, Point.CARTESIAN), new Point(28.5, 60, Point.CARTESIAN)));
+        placeSpecimen2.setConstantHeadingInterpolation(Math.toRadians(180));
+        placeSpecimen2.setZeroPowerAccelerationMultiplier(2);
 
 
         while (opModeIsActive()) {
@@ -189,9 +189,6 @@ public class GamepadSpec extends LinearOpMode {
             }
 
 
-//            if (gamepad2.left_bumper) {
-//                wristPosition += 0.015;
-//            }
 //            if (gamepad2.right_bumper) {
 //                wristPosition -= 0.015;
 //            }
@@ -205,13 +202,12 @@ public class GamepadSpec extends LinearOpMode {
                 follower.startTeleopDrive();
             }
 
-            if (gamepad2.a) {
-                slide.setPosition(-100, 1.0);
-            }
+
 
             claw.setClawPosition(clawPosition);
             claw.setWristPosition(wristPosition);
             claw.setArmPosition(armPosition);
+            claw.setDraggerPosition(draggerPosition);
 
             telemetry.addData("X", follower.getPose().getX());
             telemetry.addData("Y", follower.getPose().getY());

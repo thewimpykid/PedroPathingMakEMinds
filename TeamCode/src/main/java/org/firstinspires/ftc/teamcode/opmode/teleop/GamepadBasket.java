@@ -29,6 +29,7 @@ public class GamepadBasket extends LinearOpMode {
     double clawPosition = 1;
     double armPosition = 0.5;
     double wristPosition = 0.5;
+    double draggerPosition = 0.76;
 
     private final Pose observationPose = new Pose(5, 30, Math.toRadians(180));
     private final Pose parkPose = new Pose(0, 50, Math.toRadians(270));
@@ -218,6 +219,7 @@ public class GamepadBasket extends LinearOpMode {
             claw.setClawPosition(clawPosition);
             claw.setWristPosition(wristPosition);
             claw.setArmPosition(armPosition);
+            claw.setDraggerPosition(draggerPosition);
 
             telemetry.addData("X", follower.getPose().getX());
             telemetry.addData("Y", follower.getPose().getY());
